@@ -3,24 +3,6 @@ let submit = document.getElementById('submit')
 let selectedSortElement = document.querySelector('#sort')
 let sortbtn = document.getElementById('sortbtn')
 
-function dynamicsort(property,order) {
-    var sort_order = 1;
-    if(order === "desc"){
-        sort_order = -1;
-    }
-    return function (a, b){
-        // a should come before b in the sorted order
-        if(a[property] < b[property]){
-                return -1 * sort_order;
-        // a should come after b in the sorted order
-        }else if(a[property] > b[property]){
-                return 1 * sort_order;
-        // a and b are the same
-        }else{
-                return 0 * sort_order;
-        }
-    }
-}
 // sortbtn.onclick = 
 async function sort(){
     const resp = await fetch('/todos', { method: 'GET' })
@@ -123,6 +105,6 @@ async function addNewTodoJson(title, description, duedate, status, priority, not
     body: JSON.stringify({ title, description, duedate, status, priority, note })
   })
 
-  addTodosList()
+
 
 }
