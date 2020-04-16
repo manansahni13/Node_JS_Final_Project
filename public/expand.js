@@ -58,7 +58,7 @@ async function todosLoader() {
 
                     // console.log(idforli)
                    
-                    var updateButton = $("<input type='button' value='Press me to update!' class='btn btn-danger update' id = 'updatebtn" + idforli + "' data-toggle='modal' data-target='#signup' style='margin-left:650px;'>")
+                    var updateButton = $("<input type='button' value='Update' class='btn btn-danger update' id = 'updatebtn" + idforli + "' data-toggle='modal' data-target='#signup' style='margin-left:650px;'>")
                     // var updateButton = $("<input type='button' onclick= 'goto('#modal-body')' value='Press me to update!' class='btn btn-danger update' id = 'updatebtn" + idforli + "' data-toggle='modal' data-target='#signup' style='margin-left:650px;'>")
                     $(li).append(updateButton);
 
