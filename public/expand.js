@@ -1,69 +1,108 @@
-$(window).load(
-  async function () {
-      const resp = await fetch('/todos', { method: 'GET' })
-      const todos = await resp.json()
-      console.log(todos)
-      let temp = []
+var uniqueid;
 
-      for (const element in todos) {
+async function todosLoader() {
 
-          task = {
-              title: todos[element].title,
-              sub: [{
-                  title: 'description: ' + todos[element].description,
-                  sub: null
-              }, {
-                  title: 'status: ' + todos[element].status,
-                  sub: null
+    const sort = document.getElementById('sortBy').value
+    // console.log(sort);
 
-              }, {
-                  title: 'duedate: ' + todos[element].duedate,
-                  sub: null
+    const resp = await fetch('/todos/' + sort, { method: 'GET' })
+    const todos = await resp.json()
+    let temp = []
 
-              }, {
-                  title: 'priority: ' + todos[element].priority,
-                  sub: null
+    for (const element in todos) {
 
-              }, {
-                  title: 'note: ' + todos[element].note,
-                  sub: null
-              }]
-          }
-          temp.push(task)
-      }
-      // console.log(task.sub)
-      
+        task = {
+            id: todos[element].id,
+            title: todos[element].title,
+            sub: [{
+                title: 'description: ' + todos[element].description,
+                sub: null
+            }, {
+                title: 'status: ' + todos[element].status,
+                sub: null
 
-      var JSON = { menu: temp }
-      console.log(JSON)
+            }, {
+                title: 'duedate: ' + todos[element].duedate,
+                sub: null
 
+            }, {
+                title: 'priority: ' + todos[element].priority,
+                sub: null
 
-      $(function () {
+            }, {
+                title: 'note: ' + todos[element].note,
+                sub: null
+            }]
+        }
+        temp.push(task)
+    }
+    // console.log(task)
 
-          function parseMenu(ul, menu) {
-              for (var i = 0; i < menu.length; i++) {
-                  var li = $(ul).append(
-                      '<li class=' + (menu[i].sub ? 'multi' : 'simple') + '>' + menu[i].title
-                      + '</li>');
-                  if (menu[i].sub != null) {
-                      console.log("submenu")
-                      console.log(menu[i].sub)
-                      var subul = $('<ul class="list"></ul>');
-                      $(li).append(subul);
-                      parseMenu($(subul), menu[i].sub);
-                  }
-              }
-          }
+    var JSON = { menu: temp }
+    console.log(temp)
 
-          var menu = $('#menu');
-          parseMenu(menu, JSON.menu);
-      });
-  });//]]>​
+    $(function () {
+        var ul = document.getElementById('menu')
+        ul.innerHTML = ''
+        function parseMenu(ul, menu) {
 
+            for (var i = 0; i < menu.length; i++) {
+                var li = $(ul).append(
+                    '<li class=' + (menu[i].sub ? 'multi' : 'simple') + '>' + menu[i].title
+                    + '</li>');
+
+                if (menu[i].sub != null) {
+                    let idforli = menu[i].id
+                    var subul = $('<ul class="list"></ul>');
+                    $(li).append(subul);
+
+                    // console.log(idforli)
+                   
+                    var updateButton = $("<input type='button' value='Press me to update!' class='btn btn-danger update' id = 'updatebtn" + idforli + "' data-toggle='modal' data-target='#signup' style='margin-left:650px;'>")
+                    // var updateButton = $("<input type='button' onclick= 'goto('#modal-body')' value='Press me to update!' class='btn btn-danger update' id = 'updatebtn" + idforli + "' data-toggle='modal' data-target='#signup' style='margin-left:650px;'>")
+                    $(li).append(updateButton);
+
+                    parseMenu($(subul), menu[i].sub);
+                }
+            }
+        }
+
+        var menu = $('#menu');
+        parseMenu(menu, JSON.menu);
+    });
+};
 
 $(document).on('click', '.list > li ', function () {
-  $(this).next('ul').toggle(200);
-  if (($(this).next('ul').length)) {
-      $(this).toggleClass('multi-opened');
-  }
+    $(this).next('ul').toggle(200);
+    if (($(this).next('ul').length)) {
+        $(this).toggleClass('multi-opened');
+    }
+})
+
+
+$(document).on('click', '.update', function () {
+
+    uniqueid = $(this).attr("id")
+    console.log(uniqueid)
+
+});
+
+
+$(document).on('click', '#editDetails', async function () {
+    console.log(uniqueid)
+    let update_duedate = $("#update_duedate").val()
+    console.log(update_duedate)
+    let update_priority = $("#update_priority").val()
+    
+    let update_statusComplete = $('#update_complete').is(":checked")
+    let update_status = update_statusComplete ? "1-complete" : "2-incomplete"
+
+    const resp = await fetch('/todos/' + uniqueid, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    
+        body: JSON.stringify({ update_duedate, update_priority, update_status })
+    })
 })
