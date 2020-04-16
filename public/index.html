@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="sort.js"></script>
+    <script src="expand.js"></script>
+    <script async defer src="script.js"></script>
+
+</head>
+<body>
+    <h1>Todo List </h1>
+
+
+    <div class="col-sm-4">
+        <form>
+
+        
+        <h2 class="task_list_heading">Add New Task</h2>
+        <fieldset>
+
+            <label for="name">Title:*</label>
+            <br>
+            <input type="text" id="title" name="title" required>
+
+            <label for="description">Description:</label>
+            <input type="text" id="description">
+            <br>
+            <label for="duedate">Due Date:*</label>
+            <br>
+            <input type=date id="duedate">
+            <script>
+                document.getElementById('duedate').value = new Date(new Date().getTime() + 24 * 60 * 60 * 1000 - new Date().getTimezoneOffset() * 60 * 1000).toISOString().substr(0,10);
+            </script>
+            
+            <br>
+            <label for="priority">Priority:*</label>
+            <br>
+            <select id="priority" name="priority">
+                <option value="1high">High</option>
+                <option value="2medium" selected>Medium</option>
+                <option value="3low">Low</option>
+            </select>
+            <br>
+            <label for="status">Status:</label>
+            <br>
+            <select id="status" name="status">
+                <option value="incomplete" selected>InComplete</option>
+                <option value="complete">Complete</option>
+            </select>
+            <br>
+            <label for="note"> Note </label>
+            <br>
+            <input type="text" id="note">
+            <br>
+            <button id="submit">Submit</button>
+        </fieldset>
+        </form>
+        
+
+    </div>
+ <div id="sort">
+    <label for="sortBy" >sort by</label>
+
+    <select id="sortBy" onchange="getSortedTodos()">
+        <option value="duedate">Due Date</option>
+        <option value="priority">Priority</option>
+        <option value="status">Status</option>
+        
+        </select>
+</div>
+
+    <ul id="menu", class="list">
+        
+    </ul>
+</body>
+</html>
